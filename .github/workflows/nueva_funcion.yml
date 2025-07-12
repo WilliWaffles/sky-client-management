@@ -1,1 +1,51 @@
+name: Solicitud de Nueva Función
+
+on:
+  workflow_dispatch:
+    inputs:
+      titulo:
+        description: 'Nombre corto de la nueva función solicitada'
+        required: true
+      descripcion:
+        description: 'Descripción completa de lo que debería hacer esta nueva función'
+        required: true
+      urgencia:
+        description: 'Nivel de urgencia (alta, media, baja)'
+        required: true
+        default: 'media'
+
+permissions:
+  issues: write  # Permite crear issues en el repositorio
+
+jobs:
+  crear_issue_funcion:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clonar el repositorio
+      uses: actions/checkout@v3
+
+    - name: Crear archivo temporal con cuerpo del issue
+      run: |
+        echo "## Solicitud de nueva funcionalidad" > funcion.md
+        echo "" >> funcion.md
+        echo "**Título:** ${{ github.event.inputs.titulo }}" >> funcion.md
+        echo "" >> funcion.md
+        echo "**Descripción:**" >> funcion.md
+        echo "${{ github.event.inputs.descripcion }}" >> funcion.md
+        echo "" >> funcion.md
+        echo "**Urgencia:** \`${{ github.event.inputs.urgencia }}\`" >> funcion.md
+        echo "" >> funcion.md
+        echo "**Solicitado por:** @${{ github.actor }}" >> funcion.md
+        echo "---" >> funcion.md
+        echo "_Este issue fue generado automáticamente desde GitHub Actions._" >> funcion.md
+
+    - name: Crear Issue en GitHub
+      uses: peter-evans/create-issue-from-file@v5
+      with:
+        title: "Nueva Función: ${{ github.event.inputs.titulo }}"
+        content-filepath: funcion.md
+        labels: |
+          nueva-funcion
+          ${{ github.event.inputs.urgencia }}
 
