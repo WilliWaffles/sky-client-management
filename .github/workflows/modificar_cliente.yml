@@ -1,1 +1,47 @@
+name: Modificar Cliente
 
+on:
+  workflow_dispatch:
+    inputs:
+      nombre:
+        description: 'Nombre del cliente'
+        required: true
+      servicio:
+        description: 'Nuevo servicio contratado (TV, Internet, Telefonía)'
+        required: true
+      descripcion:
+        description: 'Descripción del servicio contratado'
+        required: true
+
+permissions:
+  contents: write  # Haace push de archivos modificados
+
+jobs:
+  modificar_cliente:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clonar el repositorio
+      uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Ejecutar script para modificar cliente
+      run: |
+        python app/main.py modificar "${{ github.event.inputs.nombre }}" "${{ github.event.inputs.servicio }}" "${{ github.event.inputs.descripcion }}"
+
+    - name: Mostrar contenido actualizado del archivo del cliente
+      run: |
+        echo "Contenido del cliente actualizado:"
+        cat data/*.txt || echo "No se encontró el archivo"
+
+    - name: Hacer commit de los cambios
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git add data/
+        git commit -m "Servicio agregado a cliente: ${{ github.event.inputs.nombre }}"
+        git push
