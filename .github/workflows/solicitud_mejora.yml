@@ -23,11 +23,11 @@ jobs:
 
     steps:
     - name: Crear issue en GitHub
-      uses: peter-evans/create-issue@v5
+      uses: peter-evans/create-issue@v4
       with:
         title: "🛠️ Mejora: ${{ github.event.inputs.titulo }}"
         body: |
-          ## Solicitud de mejora
+          ## ✨ Solicitud de mejora
 
           **Descripción:**
           ${{ github.event.inputs.descripcion }}
@@ -39,4 +39,3 @@ jobs:
           ---
           _Este issue fue creado automáticamente desde GitHub Actions._
         labels: mejora, ${{ github.event.inputs.prioridad }}
-
