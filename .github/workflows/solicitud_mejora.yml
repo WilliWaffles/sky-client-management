@@ -15,27 +15,36 @@ on:
         default: 'media'
 
 permissions:
-  issues: write  # Requiere permiso para crear issues
+  issues: write  # Necesario para crear issues
 
 jobs:
   crear_issue_mejora:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Crear issue en GitHub
-      uses: peter-evans/create-issue@v4
+    - name: Clonar repositorio
+      uses: actions/checkout@v3
+
+    - name: Crear archivo temporal con cuerpo del issue
+      run: |
+        echo "## Solicitud de mejora" > mejora.md
+        echo "" >> mejora.md
+        echo "**Título:** ${{ github.event.inputs.titulo }}" >> mejora.md
+        echo "" >> mejora.md
+        echo "**Descripción:**" >> mejora.md
+        echo "${{ github.event.inputs.descripcion }}" >> mejora.md
+        echo "" >> mejora.md
+        echo "**Prioridad:** \`${{ github.event.inputs.prioridad }}\`" >> mejora.md
+        echo "" >> mejora.md
+        echo "**Solicitado por:** @${{ github.actor }}" >> mejora.md
+        echo "---" >> mejora.md
+        echo "_Este issue fue generado automáticamente desde GitHub Actions._" >> mejora.md
+
+    - name: Crear Issue en GitHub
+      uses: peter-evans/create-issue-from-file@v5
       with:
-        title: "🛠️ Mejora: ${{ github.event.inputs.titulo }}"
-        body: |
-          ## ✨ Solicitud de mejora
-
-          **Descripción:**
-          ${{ github.event.inputs.descripcion }}
-
-          **Prioridad:** `${{ github.event.inputs.prioridad }}`
-
-          **Solicitado por:** @${{ github.actor }}
-
-          ---
-          _Este issue fue creado automáticamente desde GitHub Actions._
-        labels: mejora, ${{ github.event.inputs.prioridad }}
+        title: "🛠Mejora: ${{ github.event.inputs.titulo }}"
+        content-filepath: mejora.md
+        labels: |
+          mejora
+          ${{ github.event.inputs.prioridad }}
