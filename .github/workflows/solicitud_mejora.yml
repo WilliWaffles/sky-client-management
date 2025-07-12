@@ -1,1 +1,42 @@
+name: Solicitud de Mejora
+
+on:
+  workflow_dispatch:
+    inputs:
+      titulo:
+        description: 'Título breve de la mejora solicitada'
+        required: true
+      descripcion:
+        description: 'Descripción detallada de la mejora'
+        required: true
+      prioridad:
+        description: 'Nivel de prioridad (baja, media, alta)'
+        required: true
+        default: 'media'
+
+permissions:
+  issues: write  # Requiere permiso para crear issues
+
+jobs:
+  crear_issue_mejora:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Crear issue en GitHub
+      uses: peter-evans/create-issue@v5
+      with:
+        title: "🛠️ Mejora: ${{ github.event.inputs.titulo }}"
+        body: |
+          ## Solicitud de mejora
+
+          **Descripción:**
+          ${{ github.event.inputs.descripcion }}
+
+          **Prioridad:** `${{ github.event.inputs.prioridad }}`
+
+          **Solicitado por:** @${{ github.actor }}
+
+          ---
+          _Este issue fue creado automáticamente desde GitHub Actions._
+        labels: mejora, ${{ github.event.inputs.prioridad }}
 
