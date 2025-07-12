@@ -1,0 +1,4 @@
+Cliente: cliente_nuevo
+Fecha de registro: 2025-07-12
+Servicios contratados:
+- 2025-07-12 07:41:51 | Internet: Alta velocidad
