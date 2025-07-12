@@ -1,1 +1,32 @@
+name: Crear Cliente
+
+on:
+  workflow_dispatch:
+    inputs:
+      nombre:
+        description: 'Nombre del cliente'
+        required: true
+      servicio:
+        description: 'Tipo de servicio'
+        required: true
+      descripcion:
+        description: 'Descripción del servicio'
+        required: true
+
+jobs:
+  crear_cliente:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clonar el código
+      uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10
+
+    - name: Ejecutar función para crear cliente
+      run: |
+        python app/main.py crear "${{ github.event.inputs.nombre }}" "${{ github.event.inputs.servicio }}" "${{ github.event.inputs.descripcion }}"
 
