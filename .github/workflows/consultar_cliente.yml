@@ -1,1 +1,27 @@
+name: Consultar Cliente
+
+on:
+  workflow_dispatch:
+    inputs:
+      nombre:
+        description: 'Nombre del cliente a consultar'
+        required: true
+
+jobs:
+  consultar_cliente:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Clonar el repositorio
+      uses: actions/checkout@v3
+
+    - name: Configurar Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Ejecutar script para consultar cliente
+      run: |
+        echo "Consultando información de '${{ github.event.inputs.nombre }}'..."
+        python app/main.py consultar "${{ github.event.inputs.nombre }}"
 
