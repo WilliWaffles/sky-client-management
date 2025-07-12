@@ -43,7 +43,7 @@ jobs:
     - name: Crear Issue en GitHub
       uses: peter-evans/create-issue-from-file@v5
       with:
-        title: "🛠Mejora: ${{ github.event.inputs.titulo }}"
+        title: "Mejora: ${{ github.event.inputs.titulo }}"
         content-filepath: mejora.md
         labels: |
           mejora
